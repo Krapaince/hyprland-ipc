@@ -1,6 +1,8 @@
 defmodule IpcEvent do
   use GenServer
 
+  import Events, only: [events: 0]
+
   require Logger
 
   def start_link(init_arg) do
@@ -34,7 +36,15 @@ defmodule IpcEvent do
       |> String.trim_trailing()
       |> String.split(">>", parts: 2)
 
-    Hyprland.handle_event(event, event_data)
+    case Map.fetch(events(), event) do
+      {:ok, %{arg_count: arg_count}} ->
+        event_args = String.split(event_data, ",", parts: arg_count)
+
+        Hyprland.handle_event(event, event_args)
+
+      :error ->
+        nil
+    end
 
     {:noreply, state}
   end

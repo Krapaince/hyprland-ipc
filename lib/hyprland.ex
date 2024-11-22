@@ -8,21 +8,16 @@ defmodule Hyprland do
     Path.join([xdg_runtime_dir, "hypr", hyprland_instance, socket_filename])
   end
 
-  def handle_event("openwindow", data) do
-    [window_addr, _workspace_name, _window_class, window_title] =
-      String.split(data, ",", parts: 4)
-
-    if String.starts_with?(window_title, "Firefox - Sharing Indicator") do
-      Hyprctl.Dispatch.close_window("address:0x#{window_addr}")
-    end
+  def handle_event("openwindow", [window_address, _, _, "Firefox - Sharing Indicator" <> _]) do
+    Hyprctl.Dispatch.close_window("address:0x#{window_address}")
   end
 
-  def handle_event("windowtitle", window_addr) do
-    client = Hyprctl.clients() |> Enum.find(&String.ends_with?(&1["address"], window_addr))
+  def handle_event("windowtitle", [window_address]) do
+    client = Hyprctl.clients() |> Enum.find(&String.ends_with?(&1["address"], window_address))
 
     case client do
       %{"initialClass" => "firefox", "title" => "FW" <> title_remainder} ->
-        move_firefox_window(window_addr, title_remainder)
+        move_firefox_window(window_address, title_remainder)
 
       %{"title" => "Extension: (Bitwarden Password Manager) - Bitwarden — Mozilla Firefox"} ->
         handle_bitwarden_extension(client)
