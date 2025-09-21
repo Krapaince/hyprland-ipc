@@ -46,6 +46,6 @@ defmodule Hyprctl do
 
     {stdout, 0} = System.cmd("hyprctl", [flags, cmd | args])
 
-    if quiet, do: :ok, else: Jason.decode!(stdout)
+    if quiet, do: :ok, else: JSON.decode!(stdout)
   end
 end

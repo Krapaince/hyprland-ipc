@@ -17,8 +17,6 @@
             src = ./.;
 
             removeCookie = false;
-
-            mixNixDeps = import ./deps.nix { inherit lib beamPackages; };
           };
         };
         devShells.default = mkShell { buildInputs = [ elixir elixir-ls ]; };
