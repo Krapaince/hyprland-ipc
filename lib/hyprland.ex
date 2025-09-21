@@ -50,6 +50,7 @@ defmodule Hyprland do
       do: Hyprctl.Dispatch.fullscreen(window)
 
     resize_window(client, 450)
+    Hyprctl.Dispatch.focus_window(window)
   end
 
   defp resize_window(client, desired_x) do

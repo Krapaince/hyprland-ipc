@@ -2,6 +2,8 @@ defmodule Hyprctl.Dispatch do
   def close_window(window), do: Hyprctl.dispatch("closewindow", window)
   def fullscreen(window), do: Hyprctl.dispatch("fullscreen", window)
 
+  def focus_window(window), do: Hyprctl.dispatch("focuswindow", window)
+
   def move_to_workspace_silent(window, workspace),
     do: Hyprctl.dispatch("movetoworkspacesilent", "#{workspace},#{window}")
 
